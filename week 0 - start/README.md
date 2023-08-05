@@ -1,3 +1,9 @@
+Это нулевая домашка по курсу "Асинхронная архитектура" 5 поток
+Для того чтобы сравнить до/после
+
+Awesome Task Exchange System (aTES) для UberPopug Inc
+-
+
 Верхнеуровневое описание системы:
 -
 ![image](https://github.com/sweettpickle/AwesomeTaskExchangeSystem/assets/44313432/e265b238-4baf-45f9-918c-257d438ca26a)

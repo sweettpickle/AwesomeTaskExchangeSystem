@@ -22,9 +22,7 @@ namespace Identity.Application.UseCases.RemoveParrot
                 .FirstOrDefaultAsync(x => x.PublicId == request.PublicId, cancellationToken);
             if (parrot is null) return;
 
-            using var tran = session.BeginTransaction();
             await session.DeleteAsync(parrot);
-            await tran.CommitAsync();
         }
     }
 }

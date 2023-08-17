@@ -7,13 +7,12 @@ using Identity.Application.Utils.Common.Models;
 using Identity.Web.ParrotsManagement.Models;
 using Identity.Web.Utils.Web;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("parrots")]
 [ApiController]
-#if (!DEBUG)
 [Authorize]
-#endif
 public class ParrotsController : ControllerBase
 {
     private readonly ILogger<ParrotsController> _logger;

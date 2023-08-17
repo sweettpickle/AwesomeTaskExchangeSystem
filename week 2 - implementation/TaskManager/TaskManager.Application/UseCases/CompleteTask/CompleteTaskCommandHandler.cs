@@ -23,10 +23,8 @@ namespace TaskManager.Application.UseCases.CompleteTask
 
             if (task is null) throw new TaskNotFound();
 
-            using var tran = session.BeginTransaction();
             task.Complete();
             await session.SaveAsync(task);
-            await tran.CommitAsync();
         }
     }
 }

@@ -33,9 +33,7 @@ namespace TaskManager.Application.UseCases.CreateTask
 
             var task = new Domain.Task(request.Name, request.Description, writeOffAmount, accrualAmount, parrot);
 
-            using var tran = session.BeginTransaction();
             await session.SaveAsync(task);
-            await tran.CommitAsync();
 
             return new TaskResult
             {

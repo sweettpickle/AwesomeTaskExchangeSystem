@@ -22,10 +22,8 @@ namespace Identity.Application.UseCases.ChangeParrotRole
 
             if (parrot is null) return;
 
-            using var tran = session.BeginTransaction();
             parrot.ChangeRole(request.NewRole);
             await session.SaveOrUpdateAsync(parrot);
-            await tran.CommitAsync();
         }
     }
 }

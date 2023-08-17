@@ -32,9 +32,7 @@ namespace Identity.Application.UseCases.CreateParrot
                 request.AccountNickname,
                 request.FavoriteTeat);
 
-            using var tran = session.BeginTransaction();
             await session.SaveAsync(parrot);
-            await tran.CommitAsync();
 
             return new ParrotResult()
             {

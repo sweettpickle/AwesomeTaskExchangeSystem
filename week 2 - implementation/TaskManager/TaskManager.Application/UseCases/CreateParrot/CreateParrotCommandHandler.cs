@@ -24,9 +24,7 @@ namespace TaskManager.Application.UseCases.CreateParrot
 
             parrot = new Domain.Parrot(request.PublicId, request.Role);
 
-            using var tran = session.BeginTransaction();
             await session.SaveAsync(parrot);
-            await tran.CommitAsync();
         }
     }
 }

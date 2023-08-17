@@ -22,10 +22,8 @@ namespace Identity.Application.UseCases.ChangePassword
 
             if (parrot is null) return;
 
-            using var tran = session.BeginTransaction();
             parrot.ChangeFavoriteTreat(request.NewFavoriteTeat);
             await session.SaveOrUpdateAsync(parrot);
-            await tran.CommitAsync();
         }
     }
 }

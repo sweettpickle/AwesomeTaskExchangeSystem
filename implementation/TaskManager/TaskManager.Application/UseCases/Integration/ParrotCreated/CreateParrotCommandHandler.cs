@@ -2,7 +2,7 @@
 using NHibernate;
 using NHibernate.Linq;
 
-namespace TaskManager.Application.UseCases.Integration.CreateParrot
+namespace TaskManager.Application.UseCases.Integration.ParrotCreated
 {
     internal class CreateParrotCommandHandler : IRequestHandler<CreateParrotCommand>
     {

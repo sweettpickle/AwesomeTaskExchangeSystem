@@ -1,31 +1,31 @@
 ﻿using MediatR;
 using Identity.Integration.Utils.Kafka;
-using Newtonsoft.Json.Linq;
 using Identity.Application.UseCases.Internal.OnParrotCreated;
+using Identity.Integration.Utils.Kafka.Models;
 
 namespace Identity.Integration.UseCases.OnParrotCreated
 {
-    internal class NotifyExtSystemsOnParrotCreated : INotificationHandler<ParrotCreated>
+    internal class NotifyExternalSystemsOnParrotCreated : INotificationHandler<ParrotCreated>
     {
-        private readonly KafkaProducer _producer;
+        private readonly KafkaProducer<string, ParrotCreatedData> _producer;
 
-        public NotifyExtSystemsOnParrotCreated(KafkaProducer producer)
+        public NotifyExternalSystemsOnParrotCreated(KafkaProducer<string, ParrotCreatedData> producer)
         {
             _producer = producer;
         }
 
         public Task Handle(ParrotCreated notification, CancellationToken cancellationToken)
         {
-            var @event = new
+            var @event = new MessageBase<ParrotCreatedData>
             {
                 MessageType = "ParrotCreated",
-                Data = new
+                Data = new ParrotCreatedData
                 {
                     PublicId = notification.PublicId,
                     Nickname = notification.Nickname,
                     Email = notification.Email,
                     RolePid = notification.RolePid,
-                    PersonalAccountInfo = new
+                    PersonalAccountInfo = new PersonalAccountInfo
                     {
                         AccountNumber = notification.AccountNumber,
                         AccountNickname = notification.AccountNickname
@@ -33,7 +33,7 @@ namespace Identity.Integration.UseCases.OnParrotCreated
                 }
             };
 
-            return _producer.SendMessageAsync("Parrots.Streaming", JObject.FromObject(@event), cancellationToken);
+            return _producer.SendMessageAsync("Parrots.Streaming", @event, cancellationToken);
         }
     }
 }

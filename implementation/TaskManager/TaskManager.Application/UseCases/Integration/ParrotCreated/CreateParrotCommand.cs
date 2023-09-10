@@ -1,13 +1,13 @@
 ﻿using MediatR;
 
-namespace TaskManager.Application.UseCases.Integration.OnParrotRoleChanged
+namespace TaskManager.Application.UseCases.Integration.ParrotCreated
 {
-    public class ChangeParrotCommand : IRequest
+    public class CreateParrotCommand : IRequest
     {
         public string PublicId { get; }
         public RoleEnum Role { get; }
 
-        public ChangeParrotCommand(string publicId, string role)
+        public CreateParrotCommand(string publicId, string role)
         {
             PublicId = publicId;
             Role = Enum.Parse<RoleEnum>(role);

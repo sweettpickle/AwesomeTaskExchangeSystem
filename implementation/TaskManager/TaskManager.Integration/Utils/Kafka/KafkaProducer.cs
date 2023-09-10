@@ -1,31 +1,37 @@
 ﻿using Confluent.Kafka;
+using Confluent.SchemaRegistry;
+using Confluent.SchemaRegistry.Serdes;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 
 namespace TaskManager.Integration.Utils.Kafka
 {
-    internal class KafkaProducer
+    internal class KafkaProducer<K, V>
     {
-        private readonly ILogger<KafkaProducer> _logger;
-        private readonly ProducerConfig _config;
-        private readonly IProducer<Null, string> _producer;
+        private readonly ILogger<KafkaProducer<K, MessageBase<V>>> _logger;
+        private readonly IProducer<K, MessageBase<V>> _producer;
+        private readonly CachedSchemaRegistryClient _schemaRegistry;
 
-        public KafkaProducer(ILogger<KafkaProducer> logger, KafkaConfig kafkaConfig)
+        public KafkaProducer(ILogger<KafkaProducer<K, MessageBase<V>>> logger, KafkaConfig kafkaConfig)
         {
             _logger = logger;
-            _config = new ProducerConfig { BootstrapServers = kafkaConfig.BootstrapServers };
-            _producer = new ProducerBuilder<Null, string>(_config).Build();
+
+            var config = new ProducerConfig { BootstrapServers = kafkaConfig.BootstrapServers };
+            var schemaRegistryConfig = new SchemaRegistryConfig { Url = kafkaConfig.SchemaRegistryUrl.ToString() };
+
+            _schemaRegistry = new CachedSchemaRegistryClient(schemaRegistryConfig);
+            _producer = new ProducerBuilder<K, MessageBase<V>>(config)
+                .SetValueSerializer(new JsonSerializer<MessageBase<V>>(_schemaRegistry))
+                .Build();
         }
 
-        public async Task SendMessageAsync(string topic, JObject message, CancellationToken token = default)
+        public async Task SendMessageAsync(string topic, MessageBase<V> data, CancellationToken token = default)
         {
-            //_logger.LogInformation($"Producing message\n {message} to topic '{topic}'");
-
             try
             {
-                await _producer.ProduceAsync(topic, new Message<Null, string> { Value = message.ToString() }, token);
+                var message = new Message<K, MessageBase<V>> { Value = data };
+                await _producer.ProduceAsync(topic, message, token);
 
-                _logger.LogInformation($"Message\n {message}\t produced to topic '{topic}'");
+                _logger.LogInformation($"Message\n {System.Text.Json.JsonSerializer.Serialize(data)}\t produced to topic '{topic}'");
             }
             catch (Exception e)
             {
@@ -33,20 +39,20 @@ namespace TaskManager.Integration.Utils.Kafka
             }
         }
 
-        public async Task SendMessageAsync(string topic, string message, CancellationToken token = default)
-        {
-            _logger.LogInformation($"Producing message\n {message}\t to topic '{topic}'");
+        //public async Task SendMessageAsync(string topic, string message, CancellationToken token = default)
+        //{
+        //    _logger.LogInformation($"Producing message\n {message}\t to topic '{topic}'");
 
-            try
-            {
-                await _producer.ProduceAsync(topic, new Message<Null, string> { Value = message }, token);
+        //    try
+        //    {
+        //        await _producer.ProduceAsync(topic, new Message<Null, string> { Value = message }, token);
 
-                _logger.LogInformation($"Message\n {message}\t produced to topic '{topic}'");
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Oops, something went wrong");
-            }
-        }
+        //        _logger.LogInformation($"Message\n {message}\t produced to topic '{topic}'");
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        _logger.LogError(e, "Oops, something went wrong");
+        //    }
+        //}
     }
 }

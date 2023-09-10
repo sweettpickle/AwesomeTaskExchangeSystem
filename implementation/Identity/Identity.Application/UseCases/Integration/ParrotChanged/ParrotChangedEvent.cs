@@ -2,7 +2,7 @@
 
 namespace Identity.Application.UseCases.Internal.OnParrotChanged
 {
-    public class ParrotChanged : INotification
+    public class ParrotChangedEvent : INotification
     {
         public string PublicId { get; }
         public string Nickname { get; }
@@ -11,7 +11,7 @@ namespace Identity.Application.UseCases.Internal.OnParrotChanged
         public string AccountNumber { get; }
         public string AccountNickname { get; }
 
-        public ParrotChanged(
+        public ParrotChangedEvent(
             string publicId,
             string nickname,
             string email,

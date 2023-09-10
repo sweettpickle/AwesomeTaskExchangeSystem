@@ -2,7 +2,7 @@
 using NHibernate;
 using NHibernate.Linq;
 
-namespace TaskManager.Application.UseCases.Integration.OnParrotRoleChanged
+namespace TaskManager.Application.UseCases.Integration.ParrotRoleChanged
 {
     internal class ChangeParrotCommandHandler : IRequestHandler<ChangeParrotCommand>
     {

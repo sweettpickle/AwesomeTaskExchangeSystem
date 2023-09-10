@@ -34,7 +34,7 @@ namespace Identity.Integration.Utils.Kafka
 
                     try
                     {
-                        Logger.LogInformation($"Message: {consumer.Message.Value} received from {consumer.TopicPartitionOffset}");
+                        Logger.LogInformation($"Message: {consumer.Message.Value} received from {consumer.TopicPartitionOffset.Topic}");
                         ProcessAsync(consumer.Message.Value, cancellationToken);
                     }
                     catch(Exception e)
@@ -52,7 +52,9 @@ namespace Identity.Integration.Utils.Kafka
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            Consumer.Close();
+            Consumer.Close(); //// Commit offsets and leave the group cleanly
+            Consumer.Dispose();
+
             return Task.CompletedTask;
         }
     }

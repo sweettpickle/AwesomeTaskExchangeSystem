@@ -1,4 +1,5 @@
 ﻿using Identity.Integration.Utils.Kafka;
+using Identity.Integration.Utils.Kafka.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -18,8 +19,9 @@ namespace Identity.Integration.Utils
 
             return services
                     .AddSingleton(kafkaConfig)
-                    .AddSingleton<KafkaProducer>()
-                    //.AddHostedService<TestConsumer>()
+                    .AddSingleton<KafkaProducer<string, ParrotCreatedData>>()
+                    .AddSingleton<KafkaProducer<string, ParrotRoleChangedData>>()
+                    .AddSingleton<KafkaProducer<string, ParrotChangedData>>()
                     .AddMediatR(cfg =>
                     {
                         cfg.RegisterServicesFromAssembly(executingAssembly);

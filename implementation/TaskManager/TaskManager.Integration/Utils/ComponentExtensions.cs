@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using TaskManager.Integration.UseCases.OnParrotChanged;
-using TaskManager.Integration.UseCases.OnParrotCreated;
+using TaskManager.Integration.UseCases.ParrotChanged;
+using TaskManager.Integration.UseCases.ParrotCreated;
 using TaskManager.Integration.Utils.Kafka;
 
 namespace TaskManager.Integration.Utils
@@ -19,7 +19,6 @@ namespace TaskManager.Integration.Utils
 
             return services
                     .AddSingleton(kafkaConfig)
-                    .AddSingleton<KafkaProducer>()
                     .AddHostedService<ParrotCreatedConsumer>()
                     .AddHostedService<ParrotChangedConsumer>()
                     .AddMediatR(cfg =>

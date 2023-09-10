@@ -29,7 +29,7 @@ namespace Identity.Application.UseCases.Client.ChangeParrotRole
             parrot.ChangeRole(request.NewRole);
             await session.SaveOrUpdateAsync(parrot);
 
-            await _mediator.Publish(new ParrotRoleChanged(parrot.PublicId, parrot.Role.ToString()));
+            await _mediator.Publish(new ParrotRoleChangedEvent(parrot.PublicId, parrot.Role.ToString()));
         }
     }
 }
